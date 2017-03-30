@@ -788,9 +788,8 @@ abstract class BaseFacebook
     try {
       // need to circumvent json_decode by calling _oauthRequest
       // directly, since response isn't JSON format.
-      $access_token_response =
-        $this->_oauthRequest(
-          $this->getUrl('graph', '/oauth/access_token'),
+      $response_params =
+        $this->_graph('/oauth/access_token', 'GET',
           $params = array('client_id' => $this->getAppId(),
                           'client_secret' => $this->getAppSecret(),
                           'redirect_uri' => $redirect_uri,
@@ -801,12 +800,6 @@ abstract class BaseFacebook
       return false;
     }
 
-    if (empty($access_token_response)) {
-      return false;
-    }
-
-    $response_params = array();
-    parse_str($access_token_response, $response_params);
     if (!isset($response_params['access_token'])) {
       return false;
     }
